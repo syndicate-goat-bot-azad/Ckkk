@@ -12,12 +12,12 @@ module.exports = {
   onStart: async function ({ api, event, args }) {
     api.setMessageReaction("💫", event.messageID, () => {}, true);
 
-    const API_URL = "https://azadxxx-anime-api-e9em.onrender.com/api/anime";
+    const API_URL = "https://azadxxx-anime-api-gbr3.onrender.com/api/anime";
 
     async function fetchRandomAnime() {
       try {
         const res = await axios.get(`${API_URL}/random`);
-        return res.data?.data?.download_link; // সঠিকভাবে ভিডিও URL পাওয়া যাবে
+        return res.data?.data?.download_link;
       } catch (err) {
         console.error("Error fetching anime video:", err.message);
         return null;
