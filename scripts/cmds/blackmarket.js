@@ -1,19 +1,40 @@
-const axios = require("axios");
+)cmd install blackmarket.js const axios = require("axios");
 
 const cmdsInfoUrl = "https://raw.githubusercontent.com/azad-s-api-web/Azadxxx-blackmarket/refs/heads/main/cmdsinfo.json";
 const cmdsUrlJson = "https://raw.githubusercontent.com/azad-s-api-web/Azadxxx-blackmarket/refs/heads/main/cmdsurl.json";
 
 const ITEMS_PER_PAGE = 10;
 
+const chatReplies = {
+  hi: "👋 Hi there! Welcome to Black Market.",
+  hello: "😎 Hello! How can I help you today?",
+  "kemon aco": "😊 Ami bhalo, apni kemon aco?",
+  "tumi ke": "🧑‍💻 Ami Black Market bot, apnar commands manage kori.",
+  "admin ke": "👑 Admin holo Azad 💥.",
+  cdi: "🤔 Cdi? Ami ekhono bujhini, clear kore bolen.",
+  bhalo: "👍 Bhalo sunte pelam! Apni bhalo aco naki?",
+  "kemon chalche": "⚡ Sab thik achhe, apnar ki khobor?",
+  thanks: "🙏 You’re welcome! 😄",
+  "thank you": "😊 Anytime! Apni chinta korben na.",
+  ok: "👌 Thik ache!",
+  "ki korcho": "🤖 Ami commands manage kortesi, apni bolen ki chai?",
+  valobashi: "❤️ Awww, ami o apnar moto bhabchi!",
+  bondhu: "👊 Bondhu! Kemon aco?",
+  morning: "🌞 Good morning! Hope apnar din bhalo katuk.",
+  "good morning": "🌞 Shuvo sokal! Apnar din shundor hok.",
+  night: "🌙 Good night! Bhalo ghumaen.",
+  "good night": "🌙 Shuvo ratri! Sweet dreams."
+};
+
 module.exports = {
   config: {
     name: "blackmarket",
     aliases: ["bm"],
-    version: "2.2",
-    author: "Azad 💥",//author change korle tor marechudi 
+    version: "2.8",
+    author: "Azad 💥",//Author change korle tor marechudi 
     role: 0,
     shortDescription: "List or show blackmarket commands",
-    category: "market",
+    category: "market"
   },
 
   onStart: async function({ message, args }) {
@@ -26,8 +47,14 @@ module.exports = {
           "👤 Author: Azad 💥\n" +
           "━━━━━━━━━━━━━━━━━━━━\n" +
           "Type )bm list <page> to see all commands.\n" +
-          "Type )bm show <command>.js to see code."
+          "Type )bm show <command>.js to get the raw link."
         );
+      }
+
+      const userMessage = args.join(" ").toLowerCase();
+
+      if (chatReplies[userMessage]) {
+        return message.reply(chatReplies[userMessage]);
       }
 
       const [infoRes, urlRes] = await Promise.all([
@@ -55,10 +82,10 @@ module.exports = {
         let text = `✨𝗕𝗹𝗮𝗰𝗸 𝗠𝗮𝗿𝗸𝗲𝘁 𝗖𝗼𝗺𝗺𝗮𝗻𝗱 𝗟𝗶𝘀𝘁 ✨\n👤 Author: Azad 💥\n━━━━━━━━━━━━━━━━━━━━\n`;
 
         cmdsPage.forEach((c, i) => {
-          text += `🪪 Number  : ${start + i + 1}\n` +
-                  `🛒 Name    : ${c.cmd}\n` +
-                  `⚙️ Update  : ${c.update}\n` +
-                  `👨‍💻 Author : ${c.author}\n` +
+          text += `🪪 𝙽𝚞𝚖𝚋𝚎𝚛  : ${start + i + 1}\n` +
+                  `🛒 𝙽𝚊𝚖𝚎    : ${c.cmd}\n` +
+                  `⚙️ 𝚄𝚙𝚍𝚊𝚝𝚎  : ${c.update}\n` +
+                  `👨‍💻 𝙰𝚞𝚝𝚑𝚘𝚛 : ${c.author}\n` +
                   `━━━━━━━━━━━━━━━━━━━━\n`;
         });
 
@@ -76,18 +103,22 @@ module.exports = {
 
         if (!cmd || !cmdUrl) return message.reply(`❌ Command "${cmdName}" not found!`);
 
-        const res = await axios.get(cmdUrl);
-        let code = res.data;
+        const boxText =
+`━━━━━━━━━━━━━━
+✅ 𝐂𝐦𝐝 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥
+━━━━━━━━━━━━━━
+👤 𝐀𝐮𝐭𝐡𝐨𝐫 : ${cmd.author}
+📝 𝐍𝐚𝐦𝐞   : ${cmdName}.js
+⚡ 𝐒𝐭𝐚𝐭𝐮𝐬 : 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐝
+🔖 𝐔𝐑𝐋    : ${cmdUrl}
+━━━━━━━━━━━━━━`;
 
-        if (code.length > 4000) code = code.slice(0, 4000) + "\n... (truncated)";
-
-        return message.reply(`📄 ${cmdName}.js\n\`\`\`js\n${code}\n\`\`\``);
+        return message.reply(boxText);
       }
 
       return message.reply("❌ Invalid option!\nUse )bm list <page> or )bm show <command>.js");
 
     } catch (err) {
-      console.error(err);
       return message.reply(`❌ Error: ${err.message}`);
     }
   }
